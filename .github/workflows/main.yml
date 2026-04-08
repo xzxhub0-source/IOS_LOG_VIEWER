@@ -1,0 +1,33 @@
+name: Build XZX Log Viewer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_16.4.app
+
+      - name: Build iOS app
+        run: |
+          xcodebuild -project XZX-LogViewer.xcodeproj \
+            -scheme XZX-LogViewer \
+            -sdk iphoneos \
+            -configuration Release \
+            build
+
+      - name: Create IPA
+        run: |
+          mkdir -p Payload
+          cp -r ~/Library/Developer/Xcode/DerivedData/XZX-LogViewer-*/Build/Products/Release-iphoneos/XZX-LogViewer.app Payload/
+          zip -r XZX-LogViewer.ipa Payload
+
+      - name:
