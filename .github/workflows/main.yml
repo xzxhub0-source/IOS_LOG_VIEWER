@@ -22,6 +22,7 @@ jobs:
             -scheme XZX-LogViewer \
             -sdk iphoneos \
             -configuration Release \
+            -allowProvisioningUpdates \
             build
 
       - name: Create IPA
@@ -30,4 +31,10 @@ jobs:
           cp -r ~/Library/Developer/Xcode/DerivedData/XZX-LogViewer-*/Build/Products/Release-iphoneos/XZX-LogViewer.app Payload/
           zip -r XZX-LogViewer.ipa Payload
 
-      - name:
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: XZX-LogViewer
+          path: XZX-LogViewer.ipa
+          if-no-files-found: error
+          retention-days: 90
